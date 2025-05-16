@@ -1,4 +1,4 @@
-# ISOTERMA BULK 864
+
 
 dimension	3
 boundary	p p p
@@ -7,8 +7,8 @@ atom_style	atomic
 neighbor	0.5 bin
 neigh_modify	every 1 delay 5 check yes
 
-#read_restart    tmp.restart.50000 #LEE EL RESTART
-read_data	data.foam_relaxed#bulk_864.dat  #agramos las estructura inicial
+
+read_data	data.foam_relaxed
 mass		1 106.42  ###Pd       
 mass		2 1.0      ####hidrogeno
 
@@ -21,7 +21,7 @@ group    Pd  type  1   # Atomos de Pd con un nro fijo
 group    H   type  2   #Atomos de H que seran insertados/removidos 
 
 variable  mu equal -2.37        #  potencial quimico
-variable i loop 20         # NUMERO DE PUNTOS DE ISOT
+variable i loop 37         # NUMERO DE PUNTOS DE ISOT
 label           loop
 
 variable  mu equal (${mu}+0.01)   #incremento potencial quimico
@@ -35,11 +35,8 @@ fix 3 H gcmc 1000 1000 1000 2 29494 300.0 ${mu} 0.01    ###inserta particulas da
 variable        NPD   equal "count(Pd)"
 variable        NH    equal "count(H)"
 
-#fix extra all print 200 "${NPD} ${NH} ${mu}" append SingPart.txt screen no title   "  "                      # screen no escribe en el txt no el log
- 
 compute 1 all ke/atom
 compute 3 all pe/atom
-#compute 5 all coord/atom 2.0
 
 thermo_style	custom step temp pe ke etotal press vol pxx pyy pzz pxy pxz pyz
 
@@ -53,7 +50,6 @@ run		1000000
 print "${NPD} ${NH} ${mu}" append Isoterma.txt screen no 
 uncompute 1
 uncompute 3 
-#uncompute 5
 undump	myDump1
 undump	myDump2
 
