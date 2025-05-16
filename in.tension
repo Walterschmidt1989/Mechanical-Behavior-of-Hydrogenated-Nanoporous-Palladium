@@ -4,16 +4,13 @@ atom_style      atomic
 
 #Se prepara celda general
 read_data       data.foam_relaxed 
-#read_restart      restart.100000  #usar read_data o read_restar segun corresponda
-#change_box      all boundary p p p
 
 #Potencial
 pair_style 	eam/alloy
 pair_coeff 	* * PdH_zhou.eam Pd H
 
-
 #Output
-compute         esf all stress/atom NULL
+compute   esf all stress/atom NULL
 compute		pot all pe/atom
 
 #Von mises stress
@@ -31,8 +28,6 @@ timestep        0.001
 ####Se obtiene largo inicial### # Relajamos por 500000 steps
 fix		1 all npt temp 300 300 0.1 aniso 0.1 0.1 1.0
 run             500000
-### se obtinene el largo inicial luego de relaajar el sistema
-#run 1
 unfix           1
 
 #Se guarda largo de la celda
@@ -45,10 +40,10 @@ reset_timestep  0
 fix		1 all nph x 0.0 0.0 1.0 y 0.0 0.0 1.0 drag 1.0
 fix             3 all temp/rescale 10 300 300 30 0.9
 ##Deformacion con strain rate 1x10^8 1/s
-fix             2 all deform 1 z erate 0.0002 units box remap x ##deformamos en z, negativo para compresion positivo para tension
+fix             2 all deform 1 z erate 0.0002 units box remap x
 
 ##Definicion de variables de deformacion y esfuerzo / grabacion en archivo de salida
-variable        strain equal "(lz-v_L0)/v_L0" ###p
+variable        strain equal "(lz-v_L0)/v_L0" 
 variable        v1 equal "-v_strain"
 variable        v2 equal "pxx/10000"
 variable        v3 equal "pyy/10000"
